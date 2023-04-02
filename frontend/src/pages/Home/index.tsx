@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { IProduct, Cart, CartItem } from "../../common/types";
 import CardProduct from "../../components/CardProduct";
+import CartComponent from "../../components/Cart";
 import { getProducts } from "../../services/products";
 import { Container, ProductsContainer, Select } from "./styles";
 
@@ -34,18 +35,20 @@ const Home: React.FC = () => {
   function addItemToCart({ itemId, itemValue }: CartItem): void {
     const newCartItems = [...cart.items, { itemId, itemValue }].filter(
       (obj: CartItem, index: number, self: CartItem[]) =>
-        index === self.findIndex((t) => t.itemId === obj.itemId)
+        index === self.findIndex((item) => item.itemId === obj.itemId)
     );
 
-    const newTotalValue = newCartItems.reduce(
-      (total, currentItem) => total + currentItem.itemValue,
-      0
-    );
-
-    setCart({
-      totalValue: newTotalValue,
+    setCart((prevCart) => ({
+      ...prevCart,
       items: newCartItems,
-    });
+    }));
+  }
+
+  function removeItemFromCart(itemId: string): void {
+    setCart((prevCart) => ({
+      ...prevCart,
+      items: [...prevCart.items.filter((item) => item.itemId !== itemId)],
+    }));
   }
 
   useEffect(() => {
@@ -97,47 +100,60 @@ const Home: React.FC = () => {
     }
   }, [selectedOrderBy]);
 
+  useEffect(() => {
+    const newTotalValue = cart.items.reduce(
+      (total, currentItem) => total + currentItem.itemValue,
+      0
+    );
+
+    setCart((prevCart) => ({ ...prevCart, totalValue: newTotalValue }));
+  }, [cart.items]);
+
   return (
-    <Container>
-      <h1>Home</h1>
+    <>
+      {/* <CartComponent /> */}
+      <Container>
+        <h1>Home</h1>
 
-      <Select onChange={handleChangeCategory} value={selectedCategory}>
-        <option value="" disabled hidden>
-          Filtre por categoria
-        </option>
-        <option value="">Nenhum filtro</option>
-        {categories.map((category) => (
-          <option key={category} value={category}>
-            {category}
+        <Select onChange={handleChangeCategory} value={selectedCategory}>
+          <option value="" disabled hidden>
+            Filtre por categoria
           </option>
-        ))}
-      </Select>
+          <option value="">Nenhum filtro</option>
+          {categories.map((category) => (
+            <option key={category} value={category}>
+              {category}
+            </option>
+          ))}
+        </Select>
 
-      <Select onChange={handleChangeOrderBy} value={selectedOrderBy}>
-        <option value="" disabled hidden>
-          Ordernar por...
-        </option>
-        {orderByOptions.map((option) => (
-          <option key={option} value={option}>
-            {option}
+        <Select onChange={handleChangeOrderBy} value={selectedOrderBy}>
+          <option value="" disabled hidden>
+            Ordernar por...
           </option>
-        ))}
-      </Select>
+          {orderByOptions.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
+        </Select>
 
-      <ProductsContainer>
-        {filteredProducts.map((product) => (
-          <CardProduct
-            key={product.id}
-            id={product.id}
-            title={product.title}
-            value={product.value}
-            category={product.category}
-            imageUrl={product.imageUrl}
-            addItemToCart={addItemToCart}
-          />
-        ))}
-      </ProductsContainer>
-    </Container>
+        <ProductsContainer>
+          {filteredProducts.map((product) => (
+            <CardProduct
+              key={product.id}
+              id={product.id}
+              title={product.title}
+              value={product.value}
+              category={product.category}
+              imageUrl={product.imageUrl}
+              addItemToCart={addItemToCart}
+              removeItemFromCart={removeItemFromCart}
+            />
+          ))}
+        </ProductsContainer>
+      </Container>
+    </>
   );
 };
 
