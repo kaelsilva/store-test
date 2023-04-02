@@ -1,0 +1,27 @@
+{
+  "name": "store-test",
+  "version": "0.0.0",
+  "description": "",
+  "main": "./src/index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "predev": "ts-node-dev ./src/database/seed.ts",
+    "dev": "ts-node-dev ./src/index.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/express": "^4.17.17",
+    "@types/node": "^18.15.11",
+    "@types/uuid": "^9.0.1",
+    "typescript": "^5.0.3"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "mongoose": "^7.0.3",
+    "ts-node-dev": "^2.0.0",
+    "uuid": "^9.0.0"
+  }
+}
