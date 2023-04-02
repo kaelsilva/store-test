@@ -12,6 +12,7 @@ const Home: React.FC = () => {
   const [selectedOrderBy, setSelectedOrderBy] = useState<string>("");
   const [filteredProducts, setFilteredProducts] = useState<IProduct[]>([]);
   const [cart, setCart] = useState<ICart>({ items: [], totalValue: 0 });
+  const [search, setSearch] = useState<string>("");
 
   const orderByOptions = [
     "Nenhum",
@@ -30,6 +31,12 @@ const Home: React.FC = () => {
     event: React.ChangeEvent<HTMLSelectElement>
   ): void {
     setSelectedOrderBy(event.target.value);
+  }
+
+  function handleChangeSearch(
+    event: React.ChangeEvent<HTMLInputElement>
+  ): void {
+    setSearch(event.target.value);
   }
 
   function addItemToCart({ itemId, itemValue }: ICartItem): void {
@@ -69,7 +76,7 @@ const Home: React.FC = () => {
     }
 
     setSelectedOrderBy("");
-  }, [selectedCategory]);
+  }, [selectedCategory, search]);
 
   useEffect(() => {
     switch (selectedOrderBy) {
@@ -98,7 +105,18 @@ const Home: React.FC = () => {
         setFilteredProducts(products);
         break;
     }
-  }, [selectedOrderBy]);
+  }, [selectedOrderBy, search]);
+
+  useEffect(() => {
+    setSelectedOrderBy("");
+    setSelectedCategory("");
+
+    const newfilteredProducts = products.filter((product) =>
+      product.title.toLowerCase().includes(search.toLowerCase())
+    );
+
+    setFilteredProducts(newfilteredProducts);
+  }, [search]);
 
   useEffect(() => {
     const newTotalValue = cart.items.reduce(
@@ -113,6 +131,8 @@ const Home: React.FC = () => {
     <>
       <Container>
         <h1>Home</h1>
+
+        <input value={search} onChange={handleChangeSearch} />
 
         <Select onChange={handleChangeCategory} value={selectedCategory}>
           <option value="" disabled hidden>
