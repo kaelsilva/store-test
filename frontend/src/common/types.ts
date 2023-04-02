@@ -2,12 +2,13 @@
 export interface IProduct {
   id: string;
   title: string;
+  description?: string;
   value: number;
   category: string;
   imageUrl: string;
-  itemInCart: boolean;
-  addItemToCart: ({}: ICartItem) => void;
-  removeItemFromCart: (itemId: string) => void;
+  itemInCart?: boolean;
+  addItemToCart?: ({}: ICartItem) => void;
+  removeItemFromCart?: (itemId: string) => void;
 }
 
 /** This is an cart item interface, which 'itemId' represents 'id' and 'itemValue' represents 'value' from IProduct*/
