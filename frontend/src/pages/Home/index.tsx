@@ -3,7 +3,15 @@ import { IProduct, ICart, ICartItem } from "../../common/types";
 import CardProduct from "../../components/CardProduct";
 import CartComponent from "../../components/Cart";
 import { getProducts } from "../../services/products";
-import { Container, ProductsContainer, Select } from "./styles";
+import {
+  Container,
+  Content,
+  FiltersContainer,
+  H1,
+  Input,
+  ProductsContainer,
+  Select,
+} from "./styles";
 
 const Home: React.FC = () => {
   const [products, setProducts] = useState<IProduct[]>([]);
@@ -67,15 +75,17 @@ const Home: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (selectedCategory && selectedCategory !== "Nenhum filtro") {
+    if (!selectedCategory) {
+      setSelectedOrderBy("");
+    }
+
+    if (selectedCategory) {
       const newFilteredProducts = selectedCategory
         ? products.filter((product) => product.category === selectedCategory)
         : products;
 
-      setFilteredProducts(newFilteredProducts);
+      return setFilteredProducts(newFilteredProducts);
     }
-
-    setSelectedOrderBy("");
   }, [selectedCategory, search]);
 
   useEffect(() => {
@@ -128,35 +138,41 @@ const Home: React.FC = () => {
   }, [cart.items]);
 
   return (
-    <>
-      <Container>
-        <h1>Home</h1>
+    <Container>
+      <Content>
+        <H1>Loja</H1>
 
-        <input value={search} onChange={handleChangeSearch} />
+        <FiltersContainer>
+          <Input
+            type="text"
+            placeholder="Filtre por nome do produto"
+            value={search}
+            onChange={handleChangeSearch}
+          />
 
-        <Select onChange={handleChangeCategory} value={selectedCategory}>
-          <option value="" disabled hidden>
-            Filtre por categoria
-          </option>
-          <option value="">Nenhum filtro</option>
-          {categories.map((category) => (
-            <option key={category} value={category}>
-              {category}
+          <Select onChange={handleChangeCategory} value={selectedCategory}>
+            <option value="" disabled hidden>
+              Filtre por categoria
             </option>
-          ))}
-        </Select>
+            <option value="">Nenhum filtro</option>
+            {categories.map((category) => (
+              <option key={category} value={category}>
+                {category}
+              </option>
+            ))}
+          </Select>
 
-        <Select onChange={handleChangeOrderBy} value={selectedOrderBy}>
-          <option value="" disabled hidden>
-            Ordernar por...
-          </option>
-          {orderByOptions.map((option) => (
-            <option key={option} value={option}>
-              {option}
+          <Select onChange={handleChangeOrderBy} value={selectedOrderBy}>
+            <option value="" disabled hidden>
+              Ordernar por...
             </option>
-          ))}
-        </Select>
-
+            {orderByOptions.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </Select>
+        </FiltersContainer>
         <ProductsContainer>
           {filteredProducts.map((product) => (
             <CardProduct
@@ -174,9 +190,9 @@ const Home: React.FC = () => {
             />
           ))}
         </ProductsContainer>
-      </Container>
+      </Content>
       <CartComponent items={cart.items} totalValue={cart.totalValue} />
-    </>
+    </Container>
   );
 };
 
