@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { IProduct, Cart, CartItem } from "../../common/types";
+import { IProduct, ICart, ICartItem } from "../../common/types";
 import CardProduct from "../../components/CardProduct";
 import CartComponent from "../../components/Cart";
 import { getProducts } from "../../services/products";
@@ -11,7 +11,7 @@ const Home: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [selectedOrderBy, setSelectedOrderBy] = useState<string>("");
   const [filteredProducts, setFilteredProducts] = useState<IProduct[]>([]);
-  const [cart, setCart] = useState<Cart>({ items: [], totalValue: 0 });
+  const [cart, setCart] = useState<ICart>({ items: [], totalValue: 0 });
 
   const orderByOptions = [
     "Nenhum",
@@ -32,9 +32,9 @@ const Home: React.FC = () => {
     setSelectedOrderBy(event.target.value);
   }
 
-  function addItemToCart({ itemId, itemValue }: CartItem): void {
+  function addItemToCart({ itemId, itemValue }: ICartItem): void {
     const newCartItems = [...cart.items, { itemId, itemValue }].filter(
-      (obj: CartItem, index: number, self: CartItem[]) =>
+      (obj: ICartItem, index: number, self: ICartItem[]) =>
         index === self.findIndex((item) => item.itemId === obj.itemId)
     );
 
@@ -111,7 +111,6 @@ const Home: React.FC = () => {
 
   return (
     <>
-      {/* <CartComponent /> */}
       <Container>
         <h1>Home</h1>
 
@@ -149,10 +148,14 @@ const Home: React.FC = () => {
               imageUrl={product.imageUrl}
               addItemToCart={addItemToCart}
               removeItemFromCart={removeItemFromCart}
+              itemInCart={
+                !!cart.items.find((item) => item.itemId === product.id)
+              }
             />
           ))}
         </ProductsContainer>
       </Container>
+      <CartComponent items={cart.items} totalValue={cart.totalValue} />
     </>
   );
 };
