@@ -27,3 +27,27 @@ export const Image = styled.div<{ imageUrl: string }>`
 
   border-radius: 14px;
 `;
+
+export const Button = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 180px;
+  height: 50px;
+
+  padding: 10px;
+
+  background-color: #50fc50;
+  color: #0c0c0c;
+
+  border-radius: 6px;
+
+  pointer-events: auto;
+  user-select: none;
+
+  cursor: pointer;
+
+  :hover {
+    background-color: #40ec40;
+  }
+`;

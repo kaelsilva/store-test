@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { IProduct } from "../../common/types";
+import { IProduct, Cart, CartItem } from "../../common/types";
 import CardProduct from "../../components/CardProduct";
 import { getProducts } from "../../services/products";
 import { Container, ProductsContainer, Select } from "./styles";
@@ -10,6 +10,7 @@ const Home: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [selectedOrderBy, setSelectedOrderBy] = useState<string>("");
   const [filteredProducts, setFilteredProducts] = useState<IProduct[]>([]);
+  const [cart, setCart] = useState<Cart>({ items: [], totalValue: 0 });
 
   const orderByOptions = [
     "Nenhum",
@@ -28,6 +29,23 @@ const Home: React.FC = () => {
     event: React.ChangeEvent<HTMLSelectElement>
   ): void {
     setSelectedOrderBy(event.target.value);
+  }
+
+  function addItemToCart({ itemId, itemValue }: CartItem): void {
+    const newCartItems = [...cart.items, { itemId, itemValue }].filter(
+      (obj: CartItem, index: number, self: CartItem[]) =>
+        index === self.findIndex((t) => t.itemId === obj.itemId)
+    );
+
+    const newTotalValue = newCartItems.reduce(
+      (total, currentItem) => total + currentItem.itemValue,
+      0
+    );
+
+    setCart({
+      totalValue: newTotalValue,
+      items: newCartItems,
+    });
   }
 
   useEffect(() => {
@@ -110,10 +128,12 @@ const Home: React.FC = () => {
         {filteredProducts.map((product) => (
           <CardProduct
             key={product.id}
+            id={product.id}
             title={product.title}
             value={product.value}
             category={product.category}
             imageUrl={product.imageUrl}
+            addItemToCart={addItemToCart}
           />
         ))}
       </ProductsContainer>
