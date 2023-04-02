@@ -28,7 +28,7 @@ export const Image = styled.div<{ imageUrl: string }>`
   border-radius: 14px;
 `;
 
-export const Button = styled.div`
+export const Button = styled.div<{ disabled: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -37,9 +37,6 @@ export const Button = styled.div`
 
   padding: 10px;
 
-  background-color: #50fc50;
-  color: #0c0c0c;
-
   border-radius: 6px;
 
   pointer-events: auto;
@@ -47,7 +44,29 @@ export const Button = styled.div`
 
   cursor: pointer;
 
-  :hover {
-    background-color: #40ec40;
+  &.add {
+    background-color: #50fc50;
+    color: #0c0c0c;
+
+    :hover {
+      background-color: #40ec40;
+    }
   }
+
+  &.remove {
+    background-color: #fc5050;
+    color: #0c0c0c;
+
+    :hover {
+      background-color: #ec4040;
+    }
+  }
+
+  ${({ disabled }) =>
+    disabled &&
+    css`
+      background-color: #ececec !important;
+      color: #acacac !important;
+      pointer-events: none !important;
+    `}
 `;

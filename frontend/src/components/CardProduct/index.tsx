@@ -9,6 +9,8 @@ const CardProduct: React.FC<IProduct> = ({
   category,
   imageUrl,
   addItemToCart,
+  removeItemFromCart,
+  itemInCart,
 }) => (
   <Container>
     <Image imageUrl={imageUrl} />
@@ -24,8 +26,20 @@ const CardProduct: React.FC<IProduct> = ({
         })
         .replace(/[^0123456789.,]/g, "")}
     </span>
-    <Button onClick={() => addItemToCart({ itemId: id, itemValue: value })}>
+    <Button
+      className="add"
+      onClick={() => addItemToCart({ itemId: id, itemValue: value })}
+      disabled={itemInCart}
+    >
       Adicionar ao carrinho
+    </Button>
+
+    <Button
+      disabled={!itemInCart}
+      className="remove"
+      onClick={() => removeItemFromCart(id)}
+    >
+      Remover do carrinho
     </Button>
   </Container>
 );
