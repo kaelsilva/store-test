@@ -1,22 +1,17 @@
-// seed.js
-
 import mongoose from "mongoose";
 import connection from "../config/config";
-import Product from "./Product";
+import Product from "./schemas/Product";
 
-// Connect to the database
 connection;
 
-// Check if the database already has data
 Product.countDocuments({})
   .then((count) => {
-    console.log(count);
     if ((count || 0) > 0) {
       console.log("Database already has data, skipping seed data insertion");
       mongoose.connection.close();
       return;
     }
-    // Insert the seed data into the database
+
     Product.insertMany([
       {
         id: "0b8ec672-3020-4340-931f-0cafc1251b07",
