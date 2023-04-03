@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { IProduct } from "../database/Product";
 
 export default interface ProductController {
   createProduct(req: Request, res: Response): Promise<void>;
