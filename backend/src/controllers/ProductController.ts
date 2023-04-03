@@ -1,68 +1,86 @@
 import { Request, Response } from "express";
-import ProductDomain from "../domain/Product";
-import { IProduct } from "../database/Product";
+import ProductRepository from "../repository/ProductRepository";
+import { IProduct } from "../database/models/Product";
 import ProductController from "../interfaces/Product";
 
 export default class ProductControllerImpl implements ProductController {
-  public async createProduct(req: Request, res: Response): Promise<void> {
+  public async createProduct(
+    request: Request,
+    response: Response
+  ): Promise<void> {
     try {
-      const product: IProduct = req.body;
-      const createdProduct = await ProductDomain.create(product);
-      res.status(201).json(createdProduct);
-    } catch (err) {
-      res.status(500).send(err);
+      const product: IProduct = request.body;
+      const createdProduct = await ProductRepository.create(product);
+      response.status(201).json(createdProduct);
+    } catch (error) {
+      response.status(500).json(error);
     }
   }
 
-  public async getProductById(req: Request, res: Response): Promise<void> {
+  public async getProductById(
+    request: Request,
+    response: Response
+  ): Promise<void> {
     try {
-      const productId: string = req.params.id;
-      const product = await ProductDomain.getById(productId);
+      const productId: string = request.params.id;
+      const product = await ProductRepository.getById(productId);
       if (product) {
-        res.json(product);
+        response.json(product);
       } else {
-        res.status(404).send("Product not found");
+        response.status(404).json("Product not found");
       }
-    } catch (err) {
-      res.status(500).send(err);
+    } catch (error) {
+      response.status(500).json({ error });
     }
   }
 
-  public async getAllProducts(req: Request, res: Response): Promise<void> {
+  public async getAllProducts(
+    request: Request,
+    response: Response
+  ): Promise<void> {
     try {
-      const products = await ProductDomain.getAll();
-      res.json(products);
-    } catch (err) {
-      res.status(500).send(err);
+      const products = await ProductRepository.getAll();
+      response.json(products);
+    } catch (error) {
+      response.status(500).json({ error });
     }
   }
 
-  public async updateProductById(req: Request, res: Response): Promise<void> {
+  public async updateProductById(
+    request: Request,
+    response: Response
+  ): Promise<void> {
     try {
-      const productId: string = req.params.id;
-      const product: IProduct = req.body;
-      const updatedProduct = await ProductDomain.updateById(productId, product);
+      const productId: string = request.params.id;
+      const product: IProduct = request.body;
+      const updatedProduct = await ProductRepository.updateById(
+        productId,
+        product
+      );
       if (updatedProduct) {
-        res.json(updatedProduct);
+        response.json(updatedProduct);
       } else {
-        res.status(404).send("Product not found");
+        response.status(404).json("Product not found");
       }
-    } catch (err) {
-      res.status(500).send(err);
+    } catch (error) {
+      response.status(500).json({ error });
     }
   }
 
-  public async deleteProductById(req: Request, res: Response): Promise<void> {
+  public async deleteProductById(
+    request: Request,
+    response: Response
+  ): Promise<void> {
     try {
-      const productId: string = req.params.id;
-      const deletedProduct = await ProductDomain.deleteById(productId);
+      const productId: string = request.params.id;
+      const deletedProduct = await ProductRepository.deleteById(productId);
       if (deletedProduct) {
-        res.json(deletedProduct);
+        response.json(deletedProduct);
       } else {
-        res.status(404).send("Product not found");
+        response.status(404).json("Product not found");
       }
-    } catch (err) {
-      res.status(500).send(err);
+    } catch (error) {
+      response.status(500).json({ error });
     }
   }
 }
