@@ -19,7 +19,7 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     getProduct(id).then((response) => {
-      setProduct(response);
+      setProduct(response.data);
     });
   }, []);
 
