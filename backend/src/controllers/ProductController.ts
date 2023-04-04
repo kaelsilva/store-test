@@ -75,7 +75,7 @@ export default class ProductControllerImpl implements ProductController {
       const productId: string = request.params.id;
       const deletedProduct = await ProductRepository.deleteById(productId);
       if (deletedProduct) {
-        response.json(deletedProduct);
+        response.status(200).json('Product deleted successfully');
       } else {
         response.status(404).json("Product not found");
       }
