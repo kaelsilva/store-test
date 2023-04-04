@@ -68,9 +68,12 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     getProducts().then((response) => {
-      setProducts(response);
-      setFilteredProducts(response);
-      setCategories([...new Set(response.map((product) => product.category))]);
+      const responseData = response.data;
+      setProducts(responseData);
+      setFilteredProducts(responseData);
+      setCategories([
+        ...new Set(responseData.map((product) => product.category)),
+      ]);
     });
   }, []);
 
